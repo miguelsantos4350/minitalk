@@ -21,7 +21,7 @@ static void	handler(int sig, siginfo_t *info)
 	if (info->si_pid)
 		client = info->si_pid;
 	if (SIGUSR1 == sig)
-		c |= (0b10000000 >> bit);
+		c |= (0x80 >> bit);
 	else if (SIGUSR2 == sig)
 		c &= ~(0x80 >> bit);
 	bit++;
@@ -45,13 +45,13 @@ int	main(int argc, char **argv)
 {
 	if (argc != 1 || argv[1])
 	{
-		fputs("Usage: ./server\n", stderr);
+		write(1, "Usage: ./server\n", 16);
 		return (EXIT_FAILURE);
 	}
-	printf("Server PID: %d\n", getpid());
+	ft_printf("Server PID: %d\n", getpid());
 	ft_signal(SIGUSR1, handler, true);
 	ft_signal(SIGUSR2, handler, true);
-	while (1337)
+	while (1)
 		pause();
 	return (EXIT_SUCCESS);
 }

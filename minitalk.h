@@ -25,8 +25,12 @@
 # define BUSY	0
 # define READY	1
 
+# define EXIT_SUCCESS	0
+# define EXIT_FAILURE	1
+
 void	ft_signal(int sig, void *handler, bool use_siginfo);
 void	ft_kill(pid_t pid, int signum);
 int		ft_atoi(const char *str);
+int		ft_printf(const char *type, ...);
 
 #endif

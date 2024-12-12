@@ -6,7 +6,7 @@
 /*   By: msantos <msantos@student.42porto.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 15:23:15 by msantos           #+#    #+#             */
-/*   Updated: 2024/12/12 15:47:55 by msantos          ###   ########.fr       */
+/*   Updated: 2024/12/12 16:01:24 by msantos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	ft_signal(int sig, void *handler, bool use_siginfo)
 {
 	struct sigaction	sa;
 
-	sa = {0};
+	sa = (struct sigaction){0};
 	if (use_siginfo)
 	{
 		sa.sa_sigaction = handler;
@@ -38,7 +38,7 @@ void	ft_kill(pid_t pid, int signum)
 {
 	if (kill(pid, signum) < 0)
 	{
-		write(1, "ERROR", 5);
+		write(1, "INVALID PID", 11);
 		exit(EXIT_FAILURE);
 	}
 }

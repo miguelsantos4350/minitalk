@@ -1,15 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msantos <msantos@student.42porto.com>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/12 15:23:15 by msantos           #+#    #+#             */
+/*   Updated: 2024/12/12 15:47:55 by msantos          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minitalk.h"
 
-/**
- * Signal - Sets up signal handler with optional siginfo support
- * @sig: Signal to handle
- * @handler: Signal handler function (void* to support both types)
- * @use_siginfo: Boolean to determine if siginfo is needed
- */
-void	Signal(int sig, void *handler, bool use_siginfo)
+void	ft_signal(int sig, void *handler, bool use_siginfo)
 {
-	struct sigaction	sa = {0};
+	struct sigaction	sa;
 
+	sa = {0};
 	if (use_siginfo)
 	{
 		sa.sa_sigaction = handler;
@@ -17,12 +24,9 @@ void	Signal(int sig, void *handler, bool use_siginfo)
 	}
 	else
 		sa.sa_handler = handler;
- 
-	/* Block both signals during handler execution */
 	sigemptyset(&sa.sa_mask);
 	sigaddset(&sa.sa_mask, SIGUSR1);
 	sigaddset(&sa.sa_mask, SIGUSR2);
-    
 	if (sigaction(sig, &sa, NULL) < 0)
 	{
 		write(1, "ERROR", 5);
@@ -30,12 +34,7 @@ void	Signal(int sig, void *handler, bool use_siginfo)
 	}
 }
 
-/**
- * Kill - Wrapper for kill system call with error handling
- * @pid: Process ID to send signal to
- * @signum: Signal number to send
- */
-void	Kill(pid_t pid, int signum)
+void	ft_kill(pid_t pid, int signum)
 {
 	if (kill(pid, signum) < 0)
 	{
@@ -44,38 +43,27 @@ void	Kill(pid_t pid, int signum)
 	}
 }
 
-
-void print_pending_signals()
+int	ft_atoi(const char *str)
 {
-    sigset_t pending;
-    if (sigpending(&pending) == -1) {
-        write(1, "ERROR", 5);
-        exit(EXIT_FAILURE);
-    }
+	int		i;
+	int		flag;
+	long	result;
 
-    printf("\n=== Pending Signals ===\n");
-    for (int i = 1; i < NSIG; i++) {
-        if (sigismember(&pending, i)) {
-            printf("Signal %d (%s) is pending\n", i, strsignal(i));
-        }
-    }
-    printf("=======================\n\n");
-}
-
-// Function to print the list of blocked signals
-void print_blocked_signals()
-{
-    sigset_t blocked;
-    if (sigprocmask(SIG_BLOCK, NULL, &blocked) == -1) {
-        write(1, "ERROR", 5);
-        exit(EXIT_FAILURE);
-    }
-
-    printf("\n=== Blocked Signals ===\n");
-    for (int i = 1; i < NSIG; i++) {
-        if (sigismember(&blocked, i)) {
-            printf("Signal %d (%s) is blocked\n", i, strsignal(i));
-        }
-    }
-    printf("=======================\n");
+	i = 0;
+	flag = 1;
+	result = 0;
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			flag *= -1;
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		result = (str[i] - '0') + (result * 10);
+		i++;
+	}
+	return (result * flag);
 }
